@@ -1,0 +1,27 @@
+<h1>This is petition page</h1>
+
+        <h2>Please sign our petition</h2>
+        <form method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
+            </span><input type='text' name='first' placeholder='Firstname' autocomplete='off'>
+            <input type='text' name='last' placeholder='Lastname' autocomplete='off'>
+                <input type="text"  placeholder="signature" name="signature">
+                {{!-- <input type="hidden"  name="signature"> --}} 
+                <canvas id="canvas" width="600" height="100" name="signature"></canvas>
+            <button type="submit">submit</button>
+        </form>
+
+            <p>{{errorMessage}}</p>
+
+            <script src="/canvas.js"></script>
+
+       
+
+        {{!-- {{#projectsData}}
+            <div class="project-box">
+                {{#if ../image}}<div class="">
+                 <a href='/projects/{{dirName}}'><img class="project-screenshot" src="/{{dirName}}/screenshot.png"></a>
+                 <div class="box-links"><a href="/projects/{{dirName}}" class="homepage-links">{{projName}}</a></div></div>
+                {{else}}<div class="title-links"><a href="/projects/{{dirName}}"class="menu-links">{{projName}}</a></div>{{/if}}
+            </div>
+            
+{{/projectsData}} --}}
