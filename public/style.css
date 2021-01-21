@@ -1,3 +1,11 @@
 body {
     background-color: hotpink;
 }
+
+#canvas {
+    border: 2px transparent black;
+    background-color: white;
+    margin: 10px;
+    border-radius: 15px;
+    cursor: crosshair;
+}

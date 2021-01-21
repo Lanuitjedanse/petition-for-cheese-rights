@@ -1,12 +1,17 @@
 const express = require("express");
 const app = express();
 const db = require("./db");
-const cookieSession = require(`cookie-session`);
-const hb = require("express-handlebars"); // requiring the db module that holds all the db queries we want to run
+const hb = require("express-handlebars");
+const csurf = require("csurf");
 const { sessionSecret } = require("./secrets");
-
+const cookieSession = require(`cookie-session`);
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
+
+app.use(function (req, res, next) {
+    res.setHeader("x-frame-options", "deny");
+    next();
+});
 
 app.use(express.static("./public"));
 
@@ -14,18 +19,25 @@ app.use(
     cookieSession({
         maxAge: 1000 * 60 * 60 * 24 * 14,
         secret: sessionSecret,
-        // secret: secret.sessionSecret;
     })
 ); // equals to 2 weeks
 app.use(express.urlencoded({ extended: false }));
 
+app.use(csurf()); // has to be after url encoded and cookie session
+
+app.use(function (req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+}); // put underneath csurf middleware
+
 app.use((req, res, next) => {
-    //req.session.funkyChicken = "cookie name";
+    // console.log("req.sission middleware: ", req.session);
+    // req.session.name = "hello";
     // return res.redirect(req.url);
     if (req.url == "/petition") {
         next();
     } else {
-        if (req.cookies.signatureId) {
+        if (req.session.signatureId) {
             next();
         } else {
             res.redirect("/petition");
@@ -34,7 +46,8 @@ app.use((req, res, next) => {
 });
 
 app.get("/petition", (req, res) => {
-    if (!req.cookies.signatureId) {
+    // console.log("req session: ", req.session);
+    if (!req.session.signatureId) {
         res.render("petition", {
             title: "Petition Page",
             layout: "main",
@@ -46,57 +59,60 @@ app.get("/petition", (req, res) => {
 
 app.post("/petition", (req, res) => {
     // console.log("Post petition request made!");
-    const { signatureId } = req.cookies;
-
     const { first, last, signature } = req.body;
 
     if (first && last && signature) {
         //req.session.funkyChicken = "cookie name";
-
         // res.cookie("signed", true);
-
-        res.redirect("/thanks"); // redirect to thanks page
+        db.getSignature(first, last, signature)
+            .then(({ rows }) => {
+                // console.log("yay we got a signature");
+                req.session.signatureId = rows[0].id;
+                // console.log("signatureId: ", req.session);
+                res.redirect("/thanks");
+            })
+            .catch((err) => {
+                console.log("error in getSignature: ", err);
+            });
+        // redirect to thanks page
     } else {
         res.render("petition", {
             title: "Petition Page",
             errorMessage: "There was an error, please fill out every field!",
         });
     }
-
-    db.getSignature(first, last, signature)
-        .then(({ rows }) => {
-            console.log("yay we got a signature");
-            req.session.signatureId = rows[0].id;
-        })
-        .catch((err) => {
-            console.log("error in getSignature: ", err);
-        });
 });
 
-app.get("/thanks", (req, res) => {
-    // req.session.discoDuck = "quack"; // we need this
-    req.session.signatureId = req.session;
-    if (req.cookies.signatureId) {
-        db.numSignatures()
-            .then(({ rows }) => {
-                res.render("thanks", {
+app.get("/thanks", (req, res, { rows }) => {
+    if (req.session.signatureId) {
+        const promiseArray = [
+            db.pullSig(req.session.signatureId),
+            db.numSignatures({ rows }),
+        ];
+        Promise.all(promiseArray)
+            .then((results) => {
+                let signature = results[0].rows[0].signature;
+                let count = results[1].rows[0].count;
+
+                return res.render("thanks", {
                     title: "Thanks Page",
                     layout: "main",
                     rows,
+                    signature,
+                    count,
                 });
             })
             .catch((err) => {
-                console.log("error in getAllSignatures: ", err);
+                console.log("err in pulling signature: ", err);
             });
     } else {
         res.redirect("/petition");
     }
 });
 
-// WORKING SIGNERS WITHOUT COUNT
 app.get("/signers", (req, res) => {
     // console.log(req.session); to check the cookie info
-    if (req.cookies.signatureId) {
+    if (req.session.signatureId) {
         db.getAllSignatures()
             .then(({ rows }) => {
                 // console.log("see results from getAllSignature: ", rows);
@@ -125,117 +141,3 @@ app.get("/signers", (req, res) => {
 app.listen(8080, () => {
     console.log("Petition Server listening...");
 });
-
-// ALSO TRIED THIS WAY
-// const express = require("express");
-// const app = express();
-// const db = require("./db");
-// // const cookieParser = require("cookie-parser");
-// const cookieSession = require("cookie-session");
-// const { sessionSecret } = require("./secrets");
-// const hb = require("express-handlebars");
-// app.engine("handlebars", hb());
-// app.set("view engine", "handlebars");
-// app.use(express.static("./public"));
-// // middleware
-// app.use(
-//     cookieSession({
-//         maxAge: 1000 * 60 * 24 * 14,
-//         secret: sessionSecret,
-//     })
-// );
-// app.use(express.urlencoded({ extended: false }));
-// app.use((req, res, next) => {
-//     // const { signatureId } = req.cookies;
-//     // console.log("req.cookies", req.cookies);
-//     if (req.url == "/petition") {
-//         next();
-//     } else {
-//         if (req.cookies.signatureId) {
-//             next();
-//         } else {
-//             // res.redirect("/petition");
-//             req.session.signatureId = "say hi";
-//             return res.redirect("/petition");
-//         }
-//     }
-// });
-// app.get("/petition", (req, res) => {
-//     if (!req.cookies.signatureId) {
-//         res.render("petition", {
-//             title: "petition",
-//             layout: "main",
-//             // signatureId,
-//         });
-//     } else {
-//         res.redirect("/thanks");
-//     }
-// });
-// app.post("/petition", (req, res) => {
-//     // console.log("post to petition was made");
-//     // console.log("req.body", req.body);
-//     console.log("req.cookies", req.cookies);
-//     const { first, last, signature } = req.body;
-//     // console.log("req.body: ", req.body);
-//     db.getSignature(first, last, signature)
-//         .then(({ rows }) => {
-//             // console.log("results from getSignature: ");
-//             if (first && last && signature) {
-//                 // const { signatureId } = req.cookies;
-//                 req.session.signatureId = rows[0].id;
-//                 // res.cookie("signatureId", true);
-//                 // req.session.signatureId = results.rows[0].id;
-//                 res.redirect("/thanks");
-//             } else {
-//                 res.render("petition", {
-//                     title: "Petition Page",
-//                     errorMessage:
-//                         "There was an error, please fill out all forms",
-//                 });
-//             }
-//         })
-//         .catch((err) => {
-//             console.log("err in dataBase: ", err);
-//         });
-// });
-// app.get("/thanks", (req, res) => {
-//     if (req.cookies.signatureId) {
-//         res.session.signatureId = "signatureId";
-//         res.sendStatus(200);
-//         db.numSignatures()
-//             .then(({ rows }) => {
-//                 res.render("thanks", {
-//                     title: "Thanks Page",
-//                     layout: "main",
-//                     rows,
-//                 });
-//             })
-//             .catch((err) => {
-//                 console.log("error in getAllSignatures: ", err);
-//             });
-//     } else {
-//         res.redirect("/petition");
-//     }
-// });
-// app.get("/signers", (req, res) => {
-//     // console.log("req.session: ", req.session);
-//     if (req.cookies.signatureId) {
-//         db.getAllSignatures()
-//             .then(({ rows }) => {
-//                 // console.log("result.rows: ", rows);
-//                 res.render("signers", {
-//                     title: "signers",
-//                     layout: "main",
-//                     rows,
-//                 });
-//             })
-//             .catch((err) => {
-//                 console.log("error in getAllSignatures", err);
-//             });
-//     } else {
-//         res.redirect("/petition");
-//     }
-// });
-// app.listen(8080, () => {
-//     console.log("petition server is listening...");
-// });

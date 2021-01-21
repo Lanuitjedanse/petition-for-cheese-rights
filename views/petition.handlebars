@@ -1,12 +1,14 @@
 <h1>This is petition page</h1>
 
         <h2>Please sign our petition</h2>
-        <form method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
+        <form method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 80%; height: 50%;">
             </span><input type='text' name='first' placeholder='Firstname' autocomplete='off'>
             <input type='text' name='last' placeholder='Lastname' autocomplete='off'>
                 <input type="text"  placeholder="signature" name="signature">
                 {{!-- <input type="hidden"  name="signature"> --}} 
                 <canvas id="canvas" width="600" height="100" name="signature"></canvas>
+                   {{!-- put this input field in every single form and DO NOT modify this code --}}
+                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
             <button type="submit">submit</button>
         </form>
 
