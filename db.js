@@ -4,19 +4,14 @@ const spicedPg = require("spiced-pg");
 const { dbUsername, dbPassword } = require("./secrets");
 const db = spicedPg(
     `postgres:${dbUsername}:${dbPassword}@localhost:5432/petition`
-); // need to update databse
+);
 
 // spicedPg ('WhoDoWeWantToTalkTo:whichUserShouldBeRunningOurQueries:whatPasswordDoesThisUserHave
 // @WhereDoesThisCommunicationHappen:specifiedPortForCommunication/nameOfOurDataBase)
 
-// module.exports.getActors = () => {
-//     const q = `SELECT * FROM actors`;
-//     return db.query(q); // db.query takes potentially 2 arguments the first being a query we want to run on our database
-// };
-
 module.exports.getSignature = (firstName, lastName, signature) => {
     const q = `INSERT INTO signatures (first, last, signature) 
-    VALUES ($1, $2, $3)`;
+    VALUES ($1, $2, $3) RETURNING id`;
     const params = [firstName, lastName, signature];
     // console.log(params);
 
