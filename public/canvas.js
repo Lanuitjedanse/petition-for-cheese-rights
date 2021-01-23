@@ -1,75 +1,48 @@
 (function () {
-    // let animation;
-    //  animation = requestAnimationFrame(startDraw);
-    // headlines.addEventListener("mouseenter", function (e) {
-    //     cancelAnimationFrame(animation);
-    // });
-    let canvas = document.getElementById("canvas");
+    let isDrawing = false;
 
-    let ctx = canvas.getContext("2d");
+    let x = 0;
+    let y = 0;
+
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let sigId = document.getElementById("sig-id");
+
     let dataURL = canvas.toDataURL();
     console.log("dataUrl:", dataURL);
 
-    // console.log(context);
-    console.log("hello");
+    canvas.addEventListener("mousedown", (e) => {
+        x = e.offsetX;
+        y = e.offsetY;
+        isDrawing = true;
+    });
 
-    ctx.strokeStyle = "#222222";
-    ctx.lineWidth = 4;
-    let drawing = false;
+    canvas.addEventListener("mousemove", (e) => {
+        if (isDrawing) {
+            startDraw(ctx, x, y, e.offsetX, e.offsetY);
+            x = e.offsetX;
+            y = e.offsetY;
+        }
+    });
 
-    let mousePos = {
-        x: 0,
-        y: 0,
-    };
-    let lastPos = mousePos;
-    // ctx.beginPath(lastPos);
+    window.addEventListener("mouseup", (e) => {
+        if (isDrawing) {
+            startDraw(ctx, x, y, e.offsetX, e.offsetY);
+            x = 0;
+            y = 0;
+            isDrawing = false;
+            sigId.value = dataURL;
+            console.log("dataUrl: ", dataURL);
+        }
+    });
 
-    canvas.addEventListener(
-        "mousedown",
-        function (e) {
-            // drawing = true;
-            if (drawing) {
-                console.log(e);
-                lastPos = getMousePos(canvas, e);
-                startDraw();
-            }
-        },
-        false
-    );
-    canvas.addEventListener(
-        "mouseup",
-        function (e) {
-            console.log(e);
-            drawing = false;
-            // startDraw();
-        },
-        false
-    );
-
-    canvas.addEventListener(
-        "mousemove",
-        function (e) {
-            // mousePos = getMousePos(canvas, e);
-            startDraw();
-            console.log(e);
-        },
-        false
-    );
-
-    // function getMousePos(canvasDom, mouseEvent) {
-    //     var rect = canvasDom.getBoundingClientRect();
-    //     return {
-    //         x: mouseEvent.clientX - rect.left,
-    //         y: mouseEvent.clientY - rect.top,
-    //     };
-    // }
-
-    function startDraw() {
+    function startDraw(ctx, x1, y1, x2, y2) {
         ctx.beginPath();
         ctx.strokeStyle = "hotpink";
-        ctx.lineWidth = 4;
-        ctx.lineTo(500, 100);
-        ctx.moveTo(100, 100);
+        ctx.lineWidth = 3;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
         ctx.closePath();
     }
 })();

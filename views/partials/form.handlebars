@@ -1,0 +1,29 @@
+
+
+ 
+ 
+        <form method='POST' style="display: flex; flex-direction: column; justify-content: center; space-between; width: 80%; height: 50%;">
+                {{#if signup}}
+                <input type='text' name='first' placeholder='First Name' autocomplete='off'>
+                <input type='text' name='last' placeholder='Last Name' autocomplete='off'>
+                {{/if}}
+                <input type='email' name='email' placeholder='E Mail' autocomplete='off'>
+                <input type='password' name='pass' placeholder='Password' autocomplete='off'>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button>{{#if signup}}Sign Up{{else}}login{{/if}}</button>
+        </form>
+             
+                
+                   {{!-- put this input field in every single form and DO NOT modify this code --}}
+            
+    
+
+        {{!-- {{#projectsData}}
+            <div class="project-box">
+                {{#if ../image}}<div class="">
+                 <a href='/projects/{{dirName}}'><img class="project-screenshot" src="/{{dirName}}/screenshot.png"></a>
+                 <div class="box-links"><a href="/projects/{{dirName}}" class="homepage-links">{{projName}}</a></div></div>
+                {{else}}<div class="title-links"><a href="/projects/{{dirName}}"class="menu-links">{{projName}}</a></div>{{/if}}
+            </div>
+            
+{{/projectsData}} --}}

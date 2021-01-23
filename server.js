@@ -5,6 +5,7 @@ const hb = require("express-handlebars");
 const csurf = require("csurf");
 const { sessionSecret } = require("./secrets");
 const cookieSession = require(`cookie-session`);
+const { hash, compare } = require("./bc");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
@@ -45,6 +46,80 @@ app.use((req, res, next) => {
     }
 });
 
+app.get("/register", (req, res) => {
+    res.render("registration", {
+        title: "Sign up",
+        layout: "main",
+    });
+});
+
+app.post("/register", (req, res) => {
+    const { first, last, email, pass } = req.body;
+
+    if (first && last && email && pass) {
+        hash(pass)
+            .then((hashedPw) => {
+                console.log("hashed password: ", hashedPw);
+                db.insertRegData(first, last, email, hashedPw)
+                    .then(({ rows }) => {
+                        req.session.userId = rows[0].id;
+
+                        console.log("yay data in the database");
+                        res.redirect("/petition"); // we have to change this
+                    })
+                    .catch((err) => {
+                        console.log("err in insert data reg: ", err);
+                    });
+            })
+            .catch((err) => {
+                console.log("err in hashed pass:", err);
+            });
+    }
+});
+
+app.get("/login", (req, res) => {
+    res.render("login", {
+        title: "Log in",
+        layout: "main",
+    });
+});
+
+app.post("/login", (req, res) => {
+    const { email, pass } = req.body;
+
+    if (email) {
+        db.getLoginData(email)
+            .then(({ rows }) => {
+                // const emailDB = rows[0].email;
+                // console.log("email user: ", emailDB);
+                // console.log("yay the email matches!");
+                const hashedPw = rows[0].password;
+
+                compare(pass, hashedPw)
+                    .then((match) => {
+                        if (hashedPw) {
+                            req.session.loggedIn = rows[0].id;
+                            console.log("password matched?: ", match);
+                            // console.log("cookie loggedin: ", req.session.loggedIn);
+                            res.redirect("/petition");
+                        } else {
+                            res.render("petition", {
+                                title: "Petition Page",
+                                errorMessage:
+                                    "There was an error, please fill out every field!",
+                            });
+                        }
+                    })
+                    .catch((err) => console.log("err in compare:", err));
+            })
+            .catch((err) => {
+                console.log("err in getlogin data: ", err);
+            });
+
+        // you will get an actually hashed pw from you db ;)
+    }
+});
+
 app.get("/petition", (req, res) => {
     // console.log("req session: ", req.session);
     if (!req.session.signatureId) {
@@ -59,22 +134,17 @@ app.get("/petition", (req, res) => {
 
 app.post("/petition", (req, res) => {
     // console.log("Post petition request made!");
-    const { first, last, signature } = req.body;
+    const { signature } = req.body;
 
-    if (first && last && signature) {
-        //req.session.funkyChicken = "cookie name";
-        // res.cookie("signed", true);
-        db.getSignature(first, last, signature)
+    if (signature) {
+        db.insertSig(signature)
             .then(({ rows }) => {
-                // console.log("yay we got a signature");
                 req.session.signatureId = rows[0].id;
-                // console.log("signatureId: ", req.session);
                 res.redirect("/thanks");
             })
             .catch((err) => {
-                console.log("error in getSignature: ", err);
+                console.log("error in insertSig: ", err);
             });
-        // redirect to thanks page
     } else {
         res.render("petition", {
             title: "Petition Page",
@@ -111,11 +181,9 @@ app.get("/thanks", (req, res, { rows }) => {
 });
 
 app.get("/signers", (req, res) => {
-    // console.log(req.session); to check the cookie info
     if (req.session.signatureId) {
         db.getAllSignatures()
             .then(({ rows }) => {
-                // console.log("see results from getAllSignature: ", rows);
                 res.render("signers", {
                     title: "Signers Page",
                     layout: "main",
@@ -129,14 +197,6 @@ app.get("/signers", (req, res) => {
         res.redirect("/petition");
     }
 });
-
-// app.get("/petition", (req,res) => {
-//     const {cookies} = req.cookies; // to grab the value of the cookie
-
-// });
-
-// atob('cookievalue'); and it converts back to it was before
-// new cookies method has to be set on req and not res
 
 app.listen(8080, () => {
     console.log("Petition Server listening...");
