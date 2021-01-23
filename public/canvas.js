@@ -8,8 +8,8 @@
     const ctx = canvas.getContext("2d");
     let sigId = document.getElementById("sig-id");
 
-    let dataURL = canvas.toDataURL();
-    console.log("dataUrl:", dataURL);
+    // let dataURL = canvas.toDataURL("img/png", 0.5);
+    // console.log("dataUrl:", dataURL);
 
     canvas.addEventListener("mousedown", (e) => {
         x = e.offsetX;
@@ -31,14 +31,14 @@
             x = 0;
             y = 0;
             isDrawing = false;
-            sigId.value = dataURL;
-            console.log("dataUrl: ", dataURL);
+            sigId.value = canvas.toDataURL();
+            // console.log("dataUrl: ", dataURL);
         }
     });
 
     function startDraw(ctx, x1, y1, x2, y2) {
         ctx.beginPath();
-        ctx.strokeStyle = "hotpink";
+        ctx.strokeStyle = "#BCBF1D";
         ctx.lineWidth = 3;
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);

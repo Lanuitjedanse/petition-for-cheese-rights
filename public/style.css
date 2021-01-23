@@ -1,5 +1,23 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+}
+
 body {
-    background-color: hotpink;
+    background-color: #191814;
+    color: white;
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: 1fr 30px;
+}
+
+footer {
+    text-align: center;
+    padding: 2px;
+    color: black;
+    font-weight: 200;
+    background-color: white;
 }
 
 #canvas {
@@ -7,5 +25,103 @@ body {
     background-color: white;
     margin: 10px;
     border-radius: 15px;
+    padding: 10px;
     cursor: crosshair;
+}
+
+.form-petition-box {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.explanation-petition-box {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img-say-cheese {
+    /* margin-top: 10px; */
+    width: 30%;
+    border-radius: 15px;
+}
+
+.box-image-petition {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-petition,
+.sign-log-btn {
+    margin-top: 15px;
+    border-radius: 15px;
+    background-color: white;
+    font-size: 15px;
+    height: 30px;
+    width: 100px;
+    font-weight: 200;
+    border: 2px solid #c5c321;
+}
+
+.btn-petition:focus,
+.sign-log-btn:focus {
+    background-color: #c5c321;
+    border: 2px solid white;
+    color: white;
+    outline: none;
+}
+
+.error-msg-box-form-sig {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.error-msg-form-sig {
+    color: #c5c321;
+}
+
+.form-login-box,
+.form-reg-box {
+    /* margin-top: 10px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* width: 30%;
+    margin: auto; */
+}
+
+input {
+    width: 20%;
+    height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.petition-description,
+.sign-here {
+    font-weight: 200;
+}
+
+.cheese-fight-description {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.error-msg-reg {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    color: #c5c321;
 }

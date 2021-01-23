@@ -1,6 +1,19 @@
 
-<h1>{{title}}</h1>
-<p>{{errorMessage}}</p>
-{{>form signup=true}}
+    <div class="box-image-petition">
+        <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
+    </div>
+
+    <div class="cheese-fight-description">
+        <h3>Fromage frais swiss croque monsieur. Blue castello cheese on toast cut the cheese emmental manchego cheese strings blue castello mozzarella. Dolcelatte fromage lancashire st. agur blue cheese cheese strings port-salut croque monsieur hard cheese</h3>
+    </div>
+    
+    <form method='POST' class="form-reg-box">   
+        {{>form signup=true}}
+    </form>
+
+    <div class="error-msg-reg">
+        <p>{{errorMessage}}</p>
+    </div>
+
 
 

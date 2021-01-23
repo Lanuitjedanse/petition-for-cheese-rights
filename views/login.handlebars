@@ -1,5 +1,14 @@
 
-<h1>{{title}}</h1>
 
-{{>form}}
+
+    <div class="box-image-petition">
+        <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
+    </div>
+
+    <h2 class="login-title">{{title}}</h2>
+
+<form method='POST' class="form-login-box">
+    {{>form}}
+</form>
+
 <p>{{errorMessage}}</p>

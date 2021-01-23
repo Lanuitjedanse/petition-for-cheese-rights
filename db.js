@@ -9,14 +9,23 @@ const db = spicedPg(
 // spicedPg ('WhoDoWeWantToTalkTo:whichUserShouldBeRunningOurQueries:whatPasswordDoesThisUserHave
 // @WhereDoesThisCommunicationHappen:specifiedPortForCommunication/nameOfOurDataBase)
 
-module.exports.insertSig = (signature) => {
-    const q = `INSERT INTO signatures (signature) 
-    VALUES ($1) RETURNING id`;
-    const params = [signature];
+module.exports.insertSig = (signature, userId) => {
+    const q = `INSERT INTO signatures (signature, user_id) 
+    VALUES ($1, $2) RETURNING id`;
+    const params = [signature, userId];
     // console.log(params);
 
     return db.query(q, params);
 };
+
+// module.exports.insertSig = (signature) => {
+//     const q = `INSERT INTO signatures (signature)
+//     VALUES ($1)`;
+//     const params = [signature];
+//     // console.log(params);
+
+//     return db.query(q, params);
+// };
 
 module.exports.getAllSignatures = () => {
     const q = `SELECT first, last FROM users`;

@@ -32,18 +32,62 @@ app.use(function (req, res, next) {
 }); // put underneath csurf middleware
 
 app.use((req, res, next) => {
-    // console.log("req.sission middleware: ", req.session);
-    // req.session.name = "hello";
-    // return res.redirect(req.url);
-    if (req.url == "/petition") {
-        next();
-    } else {
-        if (req.session.signatureId) {
-            next();
-        } else {
-            res.redirect("/petition");
-        }
+    if (req.url == "/petition" && !req.session.userId) {
+        return res.redirect("/register");
+    } else if (req.url == "/petition" && !req.session.loggedIn) {
+        return res.redirect("/login");
+    } else if (req.url == "/register" && req.session.userId) {
+        return res.redirect("/login");
     }
+    next();
+});
+
+// if (req.url == "/petition") {
+//     if (!req.cookie.userId) {
+//         next();
+//     } else if (!req.cookie.loggedIn) {
+//         next();
+//     } else if (!req.cookie.signatureId) {
+//         next();
+//     } else {
+//         res.redirect("/petition");
+//     }
+// }
+// if (req.url == "/login") {
+//     next();
+// } else if (req.url == "/register") {
+//     next();
+// } else if (req.url == "/petition") {
+//     next();
+// } else {
+//     if (req.session.signatureId) {
+//         next();
+//     } else if (req.session.userId) {
+//         next();
+//     } else if (req.session.loggedIn) {
+//         next();
+//     } else {
+//         res.redirect("/register");
+//     }
+// }
+// OLD VERSION
+// app.use((req, res, next) => {
+//     // console.log("req.sission middleware: ", req.session);
+//     // req.session.name = "hello";
+//     // return res.redirect(req.url);
+//     if (req.url == "/petition") {
+//         next();
+//     } else {
+//         if (req.session.signatureId) {
+//             next();
+//         } else {
+//             res.redirect("/petition");
+//         }
+//     }
+// });
+
+app.get("/", (req, res) => {
+    res.redirect("/register");
 });
 
 app.get("/register", (req, res) => {
@@ -72,14 +116,23 @@ app.post("/register", (req, res) => {
                     });
             })
             .catch((err) => {
+                res.render("registration", {
+                    title: "Sign up",
+                    errorMessage: "Oops, something went wrong with DB!",
+                });
                 console.log("err in hashed pass:", err);
             });
+    } else {
+        res.render("registration", {
+            title: "Sign up",
+            errorMessage: "Oops, something went wrong!",
+        });
     }
 });
 
 app.get("/login", (req, res) => {
     res.render("login", {
-        title: "Log in",
+        title: "Please log in",
         layout: "main",
     });
 });
@@ -90,23 +143,20 @@ app.post("/login", (req, res) => {
     if (email) {
         db.getLoginData(email)
             .then(({ rows }) => {
-                // const emailDB = rows[0].email;
-                // console.log("email user: ", emailDB);
-                // console.log("yay the email matches!");
                 const hashedPw = rows[0].password;
-
                 compare(pass, hashedPw)
                     .then((match) => {
-                        if (hashedPw) {
+                        if (match) {
                             req.session.loggedIn = rows[0].id;
-                            console.log("password matched?: ", match);
-                            // console.log("cookie loggedin: ", req.session.loggedIn);
-                            res.redirect("/petition");
+                            if (req.session.signatureId) {
+                                res.redirect("/thanks");
+                            } else {
+                                res.redirect("/petition");
+                            }
                         } else {
-                            res.render("petition", {
-                                title: "Petition Page",
-                                errorMessage:
-                                    "There was an error, please fill out every field!",
+                            res.render("login", {
+                                title: "Please log in",
+                                errorMessage: "Oops, there was an error!",
                             });
                         }
                     })
@@ -114,6 +164,10 @@ app.post("/login", (req, res) => {
             })
             .catch((err) => {
                 console.log("err in getlogin data: ", err);
+                res.render("login", {
+                    title: "Please log in",
+                    errorMessage: "Oops, something went wrong!",
+                });
             });
 
         // you will get an actually hashed pw from you db ;)
@@ -122,13 +176,14 @@ app.post("/login", (req, res) => {
 
 app.get("/petition", (req, res) => {
     // console.log("req session: ", req.session);
-    if (!req.session.signatureId) {
-        res.render("petition", {
+
+    if (req.session.signatureId) {
+        return res.redirect("/thanks");
+    } else {
+        return res.render("petition", {
             title: "Petition Page",
             layout: "main",
         });
-    } else {
-        res.redirect("/thanks");
     }
 });
 
@@ -136,39 +191,53 @@ app.post("/petition", (req, res) => {
     // console.log("Post petition request made!");
     const { signature } = req.body;
 
-    if (signature) {
-        db.insertSig(signature)
-            .then(({ rows }) => {
-                req.session.signatureId = rows[0].id;
-                res.redirect("/thanks");
-            })
-            .catch((err) => {
-                console.log("error in insertSig: ", err);
+    if (req.session.userId || req.session.loggedIn) {
+        if (signature) {
+            if (req.session.userId) {
+                db.insertSig(signature, req.session.userId)
+                    .then(({ rows }) => {
+                        req.session.signatureId = rows[0].id;
+                        res.redirect("/thanks");
+                        return;
+                    })
+                    .catch((err) => {
+                        console.log("error in insertSig: ", err);
+                    });
+            } else {
+                db.insertSig(signature, req.session.loggedIn)
+                    .then(({ rows }) => {
+                        req.session.signatureId = rows[0].id;
+                        res.redirect("/thanks");
+                        return;
+                    })
+                    .catch((err) => {
+                        console.log("error in insertSig: ", err);
+                    });
+            }
+        } else {
+            res.render("petition", {
+                title: "Petition Page",
+                errorMessage:
+                    "There was an error, please fill out every field!",
             });
-    } else {
-        res.render("petition", {
-            title: "Petition Page",
-            errorMessage: "There was an error, please fill out every field!",
-        });
+        }
     }
 });
 
-app.get("/thanks", (req, res, { rows }) => {
+app.get("/thanks", (req, res) => {
     if (req.session.signatureId) {
         const promiseArray = [
             db.pullSig(req.session.signatureId),
-            db.numSignatures({ rows }),
+            db.numSignatures(),
         ];
         Promise.all(promiseArray)
             .then((results) => {
-                let signature = results[0].rows[0].signature;
+                let sigImg = results[0].rows[0].signature;
                 let count = results[1].rows[0].count;
 
                 return res.render("thanks", {
                     title: "Thanks Page",
-                    layout: "main",
-                    rows,
-                    signature,
+                    sigImg,
                     count,
                 });
             })
