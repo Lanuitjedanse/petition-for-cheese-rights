@@ -1,0 +1,14 @@
+            <div class="title-profile-box">
+                <h1>Set up your profile</h1>
+                <h3>Please tell us a bit about yourself</h3>
+            </div>
+
+            <form method='POST' class="form-profile-box">
+                <input type="number"  name="age" placeholder="Age">
+                <input type="text"  name="city" placeholder="City">
+                <input type="url"  name="url" placeholder="https://example.com">   
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button type="submit" class="btn-profile">Submit</button>
+            </form>
+
+            <p>{{errorMessage}}</p>

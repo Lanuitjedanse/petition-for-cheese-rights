@@ -3,13 +3,17 @@
         <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
     </div>
 
-    <div class="cheese-fight-description">
-        <h3>Fromage frais swiss croque monsieur. Blue castello cheese on toast cut the cheese emmental manchego cheese strings blue castello mozzarella. Dolcelatte fromage lancashire st. agur blue cheese cheese strings port-salut croque monsieur hard cheese</h3>
+    <div class="cheese-fight-description-box">
+        <h3 class="cheese-fight-description">Fromage frais swiss croque monsieur. Blue castello cheese on toast cut the cheese emmental manchego cheese strings blue castello mozzarella. Dolcelatte fromage lancashire st. agur blue cheese cheese strings port-salut croque monsieur hard cheese</h3>
     </div>
     
     <form method='POST' class="form-reg-box">   
         {{>form signup=true}}
     </form>
+
+      <div class="link-login-box">
+        <a href="/login" class="link-login">Already have an account? Click here to log in</a>
+    </div>
 
     <div class="error-msg-reg">
         <p>{{errorMessage}}</p>

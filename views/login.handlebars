@@ -7,8 +7,14 @@
 
     <h2 class="login-title">{{title}}</h2>
 
-<form method='POST' class="form-login-box">
-    {{>form}}
-</form>
+    <form method='POST' class="form-login-box">
+        {{>form}}
+    </form>
 
-<p>{{errorMessage}}</p>
+    <div class="link-reg-box">
+        <a href="/register" class="link-reg">Don't have an account yet? Click here to register</a>
+    </div>
+
+    <div class="error-login-msg-box">
+        <p class="error-msg-login">{{errorMessage}}</p>
+    </div>

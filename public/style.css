@@ -2,6 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     font-family: "Poppins", sans-serif;
+    font-weight: 200;
 }
 
 body {
@@ -16,7 +17,7 @@ footer {
     text-align: center;
     padding: 2px;
     color: black;
-    font-weight: 200;
+    /* font-weight: 200; */
     background-color: white;
 }
 
@@ -56,20 +57,22 @@ footer {
 }
 
 .btn-petition,
-.sign-log-btn {
+.sign-log-btn,
+.btn-profile {
     margin-top: 15px;
     border-radius: 15px;
     background-color: white;
     font-size: 15px;
     height: 30px;
     width: 100px;
-    font-weight: 200;
-    border: 2px solid #c5c321;
+    /* font-weight: 200; */
+    border: 2px solid #e0e086;
 }
 
 .btn-petition:focus,
-.sign-log-btn:focus {
-    background-color: #c5c321;
+.sign-log-btn:focus,
+.btn-profile:focus {
+    background-color: #e0e086;
     border: 2px solid white;
     color: white;
     outline: none;
@@ -82,7 +85,7 @@ footer {
 }
 
 .error-msg-form-sig {
-    color: #c5c321;
+    color: #e0e086;
 }
 
 .form-login-box,
@@ -108,20 +111,74 @@ input {
     margin-bottom: 30px;
 }
 
-.petition-description,
+/* .petition-description,
 .sign-here {
     font-weight: 200;
-}
+} */
 
-.cheese-fight-description {
+.cheese-fight-description-box {
     display: flex;
     justify-content: center;
     text-align: center;
+}
+
+.cheese-fight-description {
+    max-width: 600px;
+    margin-bottom: 20px;
 }
 
 .error-msg-reg {
     margin-top: 15px;
     display: flex;
     justify-content: center;
-    color: #c5c321;
+    color: #e0e086;
+}
+
+.thank-you-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.signature-box,
+.link-signers-box {
+    display: flex;
+    justify-content: center;
+}
+
+/* {
+    text-decoration: none;
+    color: #e0e086;
+} */
+
+.list-signers-box,
+.title-signers-box,
+.link-reg-box,
+.error-login-msg-box,
+.link-login-box,
+.form-profile-box,
+.title-profile-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-signers,
+.error-msg-login {
+    color: #e0e086;
+}
+
+.link-reg,
+.link-login,
+.link-signers {
+    margin-top: 15px;
+    text-decoration: none;
+    color: #e0e086;
+}
+
+.title-profile-box {
+    margin-top: 120px;
+    margin-bottom: 20px;
 }
