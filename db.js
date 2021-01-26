@@ -3,7 +3,7 @@ const spicedPg = require("spiced-pg");
 let db;
 if (process.env.DATABASE_URL) {
     // means we are in production on heroku
-    db = spicedPg(process.env.DATABSE_URL);
+    db = spicedPg(process.env.DATABASE_URL);
 } else {
     const { dbUsername, dbPassword } = require("./secrets");
     db = spicedPg(
