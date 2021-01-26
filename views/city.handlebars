@@ -1,5 +1,5 @@
-
- <h1>{{title}}</h1>
+{{!-- 
+ <h1>{{title}}</h1> --}}
  
   <div class="box-image-petition">
         <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
@@ -11,7 +11,7 @@
 
 <div class="list-signers-box">
     {{#rows}}
-    <p class="list-signers"><a href="{{url}}">{{first}} {{last}}</a> {{age}} <a href="/signers">{{city}}</a></p>
+    <p class="list-signers"><a href="{{url}}" class="link-signers">{{first}} {{last}}</a> {{age}} <a href="/signers" class="link-signers">{{city}}</a></p>
     {{/rows}}
 
 </div>

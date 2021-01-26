@@ -3,11 +3,19 @@ const app = express();
 const db = require("./db");
 const hb = require("express-handlebars");
 const csurf = require("csurf");
-const { sessionSecret } = require("./secrets");
+// const { sessionSecret } = require("./secrets");
 const cookieSession = require(`cookie-session`);
 const { hash, compare } = require("./bc");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
+let cookie_sec;
+
+if (process.env.sessionSecret) {
+    //we are in production
+    cookie_sec = process.env.sessionSecret;
+} else {
+    cookie_sec = require("./secrets").sessionSecret;
+}
 
 app.use(function (req, res, next) {
     res.setHeader("x-frame-options", "deny");
@@ -19,7 +27,7 @@ app.use(express.static("./public"));
 app.use(
     cookieSession({
         maxAge: 1000 * 60 * 60 * 24 * 14,
-        secret: sessionSecret,
+        secret: cookie_sec,
     })
 ); // equals to 2 weeks
 app.use(express.urlencoded({ extended: false }));
@@ -31,6 +39,7 @@ app.use(function (req, res, next) {
     next();
 }); // put underneath csurf middleware
 
+let signedPetition;
 // LATEST VERSION
 // app.use((req, res, next) => {
 //     if (req.url == "/petition" && !req.session.userId) {
@@ -47,17 +56,10 @@ app.get("/", (req, res) => {
     // const { email } = req.body;
 
     if (!req.session.userId) {
-        // console.log("userId", req.session.userId);
-        console.log("no user id - sign up");
         res.redirect("/register");
     } else if (!req.session.loggedIn && req.session.userId) {
-        // console.log("userId", req.session.userId);
-        console.log("cookie log in: ", req.session);
-        console.log("not logged in - log in");
         res.redirect("/login");
     } else {
-        console.log("go to petition");
-        console.log("cookie log in: ", req.session);
         res.redirect("/petition");
     }
 });
@@ -112,7 +114,7 @@ app.post("/profile", (req, res) => {
         url = req.body.url;
     } else {
         console.log("bad url dude");
-        url = "";
+        url = ""; // need to change the logic
     }
 
     db.insertProfileData(age, city, url, req.session.userId)
@@ -146,11 +148,16 @@ app.post("/login", (req, res) => {
                 compare(pass, hashedPw)
                     .then((match) => {
                         if (match) {
-                            console.log("cookie log in: ", req.session);
+                            // console.log("cookie log in: ", req.session);
+                            signedPetition = rows[0].signature;
+                            console.log("rows : ", rows);
+                            // console.log("signed petition: ", signedPetition);
                             req.session.loggedIn = rows[0].id;
                             req.session.userId = rows[0].id;
+                            console.log("coookie: ", req.session.loggedIn);
+                            console.log("coookie: ", req.session.userId);
 
-                            if (req.session.signatureId) {
+                            if (signedPetition) {
                                 // on top of checking cookie, might be helpful to check with DB
                                 // SELECT signature FROM signatures where id = $1
                                 res.redirect("/thanks");
@@ -189,6 +196,8 @@ app.get("/petition", (req, res) => {
         res.redirect("/login");
     } else if (req.session.loggedIn) {
         console.log("cookie log in petition: ", req.session);
+        console.log("signedpetition thanks get route:", signedPetition);
+
         if (req.session.signatureId) {
             res.redirect("/thanks");
         } else {
@@ -208,7 +217,13 @@ app.post("/petition", (req, res) => {
         if (signature) {
             db.insertSig(signature, req.session.userId)
                 .then(({ rows }) => {
+                    signedPetition = rows[0].signature;
                     req.session.signatureId = rows[0].id;
+                    console.log(
+                        "signedpetition thanks post pet:",
+                        signedPetition
+                    );
+
                     req.session.loggedIn = rows[0].id;
 
                     // console.log("rows[0].id", rows[0].id);
@@ -227,48 +242,8 @@ app.post("/petition", (req, res) => {
     }
 });
 
-//OLD LOGIC
-// app.post("/petition", (req, res) => {
-//     // console.log("Post petition request made!");
-//     const { signature } = req.body;
-
-//     if (req.session.userId || req.session.loggedIn) {
-//         if (signature) {
-//             if (req.session.userId) {
-//                 db.insertSig(signature, req.session.userId)
-//                     .then(({ rows }) => {
-//                         req.session.signatureId = rows[0].id;
-//                         console.log("signature with userID in DB");
-//                         res.redirect("/thanks");
-//                         return;
-//                     })
-//                     .catch((err) => {
-//                         console.log("error in insertSig: ", err);
-//                     });
-//             } else {
-//                 db.insertSig(signature, req.session.loggedIn)
-//                     .then(({ rows }) => {
-//                         req.session.signatureId = rows[0].id;
-//                         console.log("signature with loggedIn in DB");
-
-//                         res.redirect("/thanks");
-//                         return;
-//                     })
-//                     .catch((err) => {
-//                         console.log("error in insertSig: ", err);
-//                     });
-//             }
-//         } else {
-//             res.render("petition", {
-//                 title: "Petition Page",
-//                 errorMessage:
-//                     "There was an error, please fill out every field!",
-//             });
-//         }
-//     }
-// });
-
 app.get("/thanks", (req, res) => {
+    console.log("signedpetition thanks get route:", signedPetition);
     if (req.session.signatureId) {
         // check if signature is in DB to fix issue when previous user logins and don't have cookies anymore
         Promise.all([db.pullSig(req.session.signatureId), db.numSignatures()])
@@ -311,11 +286,12 @@ app.get("/signers", (req, res) => {
 
 app.get("/signers/:city", (req, res) => {
     const { city } = req.params;
+    console.log("city: ", city);
 
     db.getSignersByCity(city)
         .then(({ rows }) => {
+            console.log("city: ", city);
             console.log("filetered city result");
-            console.log("rows: ", rows);
             res.render("city", {
                 title: "Signers in your city",
                 layout: "main",
@@ -327,28 +303,25 @@ app.get("/signers/:city", (req, res) => {
         });
 });
 
-// app.get("/projects/:project", (req, res) => {
-//     const { project } = req.params;
+app.get("/edit", (req, res) => {
+    // const selectedUser = editProfile.find((item) => item.userId == project);
+    console.log("req reg cookie: ", req.session.userId);
+    db.editProfile(req.session.userId)
+        .then(({ rows }) => {
+            console.log("rows: ", rows);
+            // let firstName = results.rows[0].first;
+            // console.log("firstname: ", firstName);
+            res.render("edit", {
+                title: "Update your profile",
+                layout: "main",
+                rows,
+            });
+        })
+        .catch((err) => {
+            console.log("There was an error in retrieving data from DB: ", err);
+        });
+});
 
-//     const selectedCity = projectsData.find(
-//         (item) => item.dirName == project
-//     );
-//     console.log("selected project: ", selectedProject);
-//     console.log("project: ", project);
-
-//     if (!selectedProject) {
-//         return res.sendStatus(404);
-//     } else {
-//         res.statusCode = 200;
-//         res.render("description", {
-//             title: "Description page",
-//             layout: "main",
-//             projectsData,
-//             selectedProject,
-//         });
-//     }
-// });
-
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log("Petition Server listening...");
 });

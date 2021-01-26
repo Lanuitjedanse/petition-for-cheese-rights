@@ -152,7 +152,6 @@ input {
     color: #e0e086;
 } */
 
-.list-signers-box,
 .title-signers-box,
 .link-reg-box,
 .error-login-msg-box,
@@ -181,4 +180,26 @@ input {
 .title-profile-box {
     margin-top: 120px;
     margin-bottom: 20px;
+}
+
+.title-signers-box {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+a.list-signers {
+    text-decoration: none;
+}
+
+.list-signers-box {
+    display: grid;
+    /* max-width: 600px; */
+    grid-template-rows: max-content;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    /* align-content: center; */
 }

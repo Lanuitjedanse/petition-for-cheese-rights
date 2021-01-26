@@ -1,13 +1,15 @@
-// this module holds all the queries we'll be using to talk to our database
-
 const spicedPg = require("spiced-pg");
-const { dbUsername, dbPassword } = require("./secrets");
-const db = spicedPg(
-    `postgres:${dbUsername}:${dbPassword}@localhost:5432/petition`
-);
 
-// spicedPg ('WhoDoWeWantToTalkTo:whichUserShouldBeRunningOurQueries:whatPasswordDoesThisUserHave
-// @WhereDoesThisCommunicationHappen:specifiedPortForCommunication/nameOfOurDataBase)
+let db;
+if (process.env.DATABASE_URL) {
+    // means we are in production on heroku
+    db = spicedPg(process.env.DATABSE_URL);
+} else {
+    const { dbUsername, dbPassword } = require("./secrets");
+    db = spicedPg(
+        `postgres:${dbUsername}:${dbPassword}@localhost:5432/petition`
+    );
+}
 
 module.exports.insertSig = (signature, userId) => {
     const q = `INSERT INTO signatures (signature, user_id) 
@@ -17,17 +19,6 @@ module.exports.insertSig = (signature, userId) => {
 
     return db.query(q, params);
 };
-
-// first version
-// module.exports.getAllSigners = () => {
-//     const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url, signatures.signature FROM users
-//     JOIN user_profiles
-//     ON users.id = user_profiles.user_id
-//     JOIN signatures
-//     ON users.id = signatures.user_id`;
-
-//     return db.query(q); // db.query takes potentially 2 arguments the first being a query we want to run on our database
-// };
 
 module.exports.getAllSigners = () => {
     const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url, signatures.signature FROM users
@@ -71,7 +62,10 @@ module.exports.insertRegData = (first, last, email, hashedPw) => {
 };
 
 module.exports.getLoginData = (email) => {
-    const q = `SELECT * FROM users WHERE email = $1`;
+    const q = `SELECT users.email, users.password, users.id, signatures.signature FROM users
+    JOIN signatures 
+    ON users.id = signatures.user_id
+    WHERE email = $1`;
     const params = [email];
     return db.query(q, params);
 };
@@ -82,6 +76,17 @@ module.exports.insertProfileData = (age, city, url, userId) => {
     const params = [age, city, url, userId];
     return db.query(q, params);
 };
+
+module.exports.editProfile = (userId) => {
+    const q = `SELECT users.id, users.first, users.last, users.email, user_profiles.age, user_profiles.city, user_profiles.url 
+    FROM users 
+    JOIN user_profiles
+    ON users.id = user_profiles.id
+    WHERE user_profiles.user_id = $1`;
+    const params = [userId];
+    return db.query(q, params);
+};
+
 // left join favours info from first table defined (first table we give to sql, 2nd table is right table)
 
 // 3 // We want to use JOIN (users table and users profile table) like a tripple join

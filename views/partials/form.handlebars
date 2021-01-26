@@ -1,7 +1,7 @@
 
 
  
- 
+    {{#if login}}
        
                 {{#if signup}}
                 <input type='text' name='first' placeholder='First Name' autocomplete='off'>
@@ -11,6 +11,31 @@
                 <input type='password' name='pass' placeholder='Password' autocomplete='off'>
                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <button class="sign-log-btn">{{#if signup}}Sign Up{{else}}Log in{{/if}}</button>
+    {{/if}}
+                {{#if profile}}
+                <input type="number"  name="age" placeholder="Age">
+                <input type="text"  name="city" placeholder="City">
+                <input type="url"  name="url" placeholder="https://example.com">   
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button type="submit" class="btn-profile">Submit</button>
+                {{/if}}
+    
+
+   
+                {{#if edit}}
+                {{#rows}}
+                <input type='text' name='first' placeholder='First Name' autocomplete='off' value="{{first}}">
+                <input type='text' name='last' placeholder='Last Name' autocomplete='off' value="{{last}}">
+                <input type='email' name='email' placeholder='Email' autocomplete='off' value="{{email}}">
+                <input type='password' name='pass' placeholder='Password' autocomplete='off'>
+                <input type="number"  name="age" placeholder="Age" value="{{age}}">
+                <input type="text"  name="city" placeholder="City" value="{{city}}">
+                <input type="url"  name="url" placeholder="https://example.com" value="{{url}}">   
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button type="submit" class="update-btn-profile">Update</button>
+                {{/rows}}
+
+                {{/if}}
    
              
                 
