@@ -18,4 +18,10 @@
     <a href="/signers" class="link-signers">See all {{count}} signers</a>
 </div>
 
-<button type="submit" class="delete-btn">Delete</button>
+<a href="/edit"><button>Edit my profile</button></a>
+{{!-- NEED TO CHANGE THIS AFTER  --}}
+
+<form method='POST'>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button type="submit" class="delete-btn">Delete my signature</button>
+</form>

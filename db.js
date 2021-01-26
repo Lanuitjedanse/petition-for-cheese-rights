@@ -62,7 +62,7 @@ module.exports.insertRegData = (first, last, email, hashedPw) => {
 };
 
 module.exports.getLoginData = (email) => {
-    const q = `SELECT users.email, users.password, users.id, signatures.signature FROM users
+    const q = `SELECT users.email, users.password, users.id, signatures.signature, signatures.id AS signatureid FROM users
     JOIN signatures 
     ON users.id = signatures.user_id
     WHERE email = $1`;
@@ -81,8 +81,39 @@ module.exports.editProfile = (userId) => {
     const q = `SELECT users.id, users.first, users.last, users.email, user_profiles.age, user_profiles.city, user_profiles.url 
     FROM users 
     JOIN user_profiles
-    ON users.id = user_profiles.id
+    ON users.id = user_profiles.user_id
     WHERE user_profiles.user_id = $1`;
+    const params = [userId];
+    return db.query(q, params);
+};
+
+module.exports.updateProfileWithPass = (userId, first, last, email, pass) => {
+    const q = `UPDATE users
+    SET first = $2, last = $3, email = $4, password = $5
+    WHERE id = $1`;
+    const params = [userId, first, last, email, pass];
+    return db.query(q, params);
+};
+
+module.exports.updateProfileNoPass = (userId, first, last, email) => {
+    const q = `UPDATE users
+    SET first = $2, last = $3, email = $4
+    WHERE id = $1`;
+    const params = [userId, first, last, email];
+    return db.query(q, params);
+};
+
+module.exports.upsertProfile = (age, city, url, userId) => {
+    const q = `INSERT INTO user_profiles (age, city, url, user_id)
+    VALUES ($1, $2, $3, $4)
+    ON CONFLICT (user_id)
+    DO UPDATE SET age = $1, city = $2, url = $3`;
+    const params = [age, city, url, userId];
+    return db.query(q, params);
+};
+
+module.exports.deleteSignature = (userId) => {
+    const q = `DELETE FROM signatures WHERE user_id = $1`;
     const params = [userId];
     return db.query(q, params);
 };
