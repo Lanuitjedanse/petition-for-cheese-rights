@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
+exports.app = app;
 const db = require("./db");
 const hb = require("express-handlebars");
 const csurf = require("csurf");
+
 // const { sessionSecret } = require("./secrets");
 const cookieSession = require(`cookie-session`);
 const { hash, compare } = require("./bc");
@@ -45,7 +47,7 @@ app.use((req, res, next) => {
     } else {
         next();
     }
-});
+}); // runs for every single requests we receive
 
 app.get("/register", (req, res) => {
     res.render("registration", {
@@ -371,6 +373,11 @@ app.post("/edit", (req, res) => {
     }
 });
 
-app.listen(process.env.PORT || 8080, () => {
-    console.log("Petition Server listening...");
-});
+if (require.main == module) {
+    app.listen(process.env.PORT || 8080, () => {
+        console.log("Petition Server listening...");
+    });
+}
+
+// not allow loggedin user to register or login again because leads to bugs (should redirect to petition or thanks)
+// we want to put the middleware functions in another files

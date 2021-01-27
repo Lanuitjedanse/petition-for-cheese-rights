@@ -198,7 +198,7 @@ a.list-signers {
 .list-signers-box {
     display: grid;
     /* max-width: 600px; */
-    grid-template-rows: max-content;
+    /* grid-template-rows: max-content; */
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     /* align-content: center; */
