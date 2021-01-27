@@ -49,7 +49,7 @@ module.exports.numSignatures = () => {
 };
 
 module.exports.pullSig = (signature) => {
-    const q = `SELECT signature FROM signatures WHERE id = $1`;
+    const q = `SELECT signature, user_id FROM signatures WHERE id = $1`;
     const params = [signature];
     return db.query(q, params);
 };
@@ -62,8 +62,8 @@ module.exports.insertRegData = (first, last, email, hashedPw) => {
 };
 
 module.exports.getLoginData = (email) => {
-    const q = `SELECT users.email, users.password, users.id, signatures.signature, signatures.id AS signatureid FROM users
-    JOIN signatures 
+    const q = `SELECT users.password, users.id, signatures.id AS signatureid FROM users
+    LEFT JOIN signatures 
     ON users.id = signatures.user_id
     WHERE email = $1`;
     const params = [email];
@@ -118,6 +118,12 @@ module.exports.deleteSignature = (userId) => {
     return db.query(q, params);
 };
 
+module.exports.getUserName = (userId) => {
+    const q = `SELECT users.first, users.last FROM users
+    WHERE id = $1`;
+    const params = [userId];
+    return db.query(q, params);
+};
 // left join favours info from first table defined (first table we give to sql, 2nd table is right table)
 
 // 3 // We want to use JOIN (users table and users profile table) like a tripple join

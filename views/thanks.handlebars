@@ -6,7 +6,7 @@
 </div>
 
 <div class="thank-you-box">
-    <h2>Thank you for signing!</h2>
+    <h2>Thank you {{first}} for signing!</h2>
     <p>Let's all fight together to make a better world with cheese!</p>
 </div>
 
@@ -25,3 +25,5 @@
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button type="submit" class="delete-btn">Delete my signature</button>
 </form>
+
+{{>menu}}
