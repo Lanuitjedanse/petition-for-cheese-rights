@@ -187,7 +187,9 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
                         });
                     }
                 })
-                .catch((err) => console.log("err in compare:", err));
+                .catch((err) => {
+                    console.log("err in compare:", err);
+                });
         })
         .catch((err) => {
             console.log("err in getlogin data: ", err);
@@ -275,10 +277,13 @@ app.get("/signers", requireSignature, (req, res) => {
 
     db.getAllSigners()
         .then(({ rows }) => {
+            console.log("rows.length: ", rows.length);
+            // let first = rows[req.session.signatureId].first;
             res.render("signers", {
                 title: "Signers Page",
                 layout: "main",
                 rows,
+                // first,
             });
         })
         .catch((err) => {
@@ -291,11 +296,14 @@ app.get("/signers/:city", requireSignature, (req, res) => {
 
     db.getSignersByCity(city)
         .then(({ rows }) => {
-            // city.toLowerCase();
+            let city = rows[0].city;
+            // let first = rows[0].first;
             res.render("city", {
                 title: "Signers in your city",
                 layout: "main",
                 rows,
+                city,
+                // first,
             });
         })
         .catch((err) => {
@@ -306,10 +314,12 @@ app.get("/signers/:city", requireSignature, (req, res) => {
 app.get("/edit", requireLoggedInUser, (req, res) => {
     db.editProfile(req.session.userId)
         .then(({ rows }) => {
+            let first = rows[0].first;
             res.render("edit", {
                 title: "Update your profile",
                 layout: "main",
                 rows,
+                first,
             });
         })
         .catch((err) => {

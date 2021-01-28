@@ -1,5 +1,5 @@
 <header class="nav-bar">
-        {{>menu login=true}}
+        {{>menu in=true}}
     </header>
 <section class="signers-page">
 
@@ -10,7 +10,7 @@
     <div class="list-signers-box">
         {{#rows}}
         <div class="signers-row-box">
-            <p class="list-signers"><a href="{{url}}" class="link-signers">{{first}} {{last}}</a> {{age}} <a class="link-signers" href="/signers/{{city}}">{{city}}</a></p>
+            <p class="list-signers"><a href="{{url}}" target="_blank" rel="noopener noreferrer" class="link-signers" >{{first}} {{last}}</a> {{age}} <a class="link-signers" href="/signers/{{city}}">{{city}}</a></p>
         </div>
         {{/rows}}
 

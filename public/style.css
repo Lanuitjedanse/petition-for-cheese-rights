@@ -10,34 +10,42 @@ body {
     color: white;
     display: grid;
     min-height: 100vh;
-    grid-template-rows: 60px 1fr 30px;
+    grid-template-rows: 50px 1fr 30px;
 }
 
 header {
     margin-top: 0;
-    background-color: white;
+    background-color: #191814;
     display: flex;
     justify-content: flex-end;
-
+    border-bottom: 1px solid white;
     align-items: flex-end;
 }
 
-/* .inner-box-nav {
-    align-self: center;
-} */
+nav {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
 
 .menu-links {
     margin-left: 10px;
     margin-right: 10px;
-    color: black;
+    color: white;
+    font-weight: 300;
+    text-decoration: none;
+}
+
+.menu-links:hover {
+    color: #e0e086;
 }
 
 footer {
     text-align: center;
     padding: 2px;
-    color: black;
-    /* font-weight: 200; */
-    background-color: white;
+    color: white;
+    font-weight: 300;
+    /* border-top: 1px solid white; */
+    background-color: #191813;
 }
 
 #canvas {
@@ -102,15 +110,22 @@ footer {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    /* width: 30%;
-    margin: auto; */
 }
 
 input {
     width: 20%;
-    height: 30px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    font-size: 1em;
+    padding: 7px 11px;
+    margin: 5px 20px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #e0e086;
+    color: white;
+}
+
+input:hover,
+input:focus {
+    outline: none;
 }
 
 .login-title {
@@ -138,8 +153,9 @@ span.yellow {
     color: #e0e086;
 }
 
-.form-profile-box,
-.title-profile-box {
+.form-profile-box {
+    margin-top: 20px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -166,7 +182,7 @@ span.yellow {
 
 .title-signers-box {
     margin-top: 30px;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -179,23 +195,32 @@ a.list-signers {
 }
 
 .list-signers-box {
+    margin-top: 30px;
     display: grid;
     /* max-width: 600px; */
     /* grid-template-rows: max-content; */
-    grid-template-columns: repeat(3, 1fr);
+
+    gap: 30px;
     justify-items: center;
+    margin-bottom: 30px;
     /* align-content: center; */
 }
 
-.edit-page {
-    background-image: url("images/cheese-bcg.jpg");
+.cap {
+    text-transform: capitalize;
+}
+
+.color-bold-city {
+    color: #e0e086;
+    font-weight: 300;
 }
 
 .edit-page,
 .thanks-page,
 .login-page,
 .petition-page,
-.register-page {
+.register-page,
+.profile-page {
     display: flex;
     flex-direction: column;
     justify-content: center;

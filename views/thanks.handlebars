@@ -1,11 +1,11 @@
 <header class="nav-bar">
-        {{>menu login=true}}
+        {{>menu in=true}}
     </header>
 <section class="thanks-page">
 
     <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
 
-    <h2>Thank you {{first}} for signing!</h2>
+    <h2>Thank you <span class="cap">{{first}}</span> for signing!</h2>
     <p>Let's all contribute together to make a better cheesy world!</p>
 
     <img src="{{sigImg}}" alt="signature" class="signature-img">

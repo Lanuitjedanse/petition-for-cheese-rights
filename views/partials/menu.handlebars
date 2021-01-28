@@ -1,10 +1,12 @@
 <nav>
-    {{#if logout}}<a href="/login" class="menu-links">Log in</a>{{/if}}
-    {{#if login}}
-    <a class="menu-links">Good to see you {{first}}</a>
-    <a href="/logout" class="menu-links">Log out</a>
-    <a href="/edit" class="menu-links">Edit profile</a>
+    {{#if out}}<a href="/login" class="menu-links">Log in</a>{{/if}}
+    {{#if signup}}<a href="/register" class="menu-links">Sign up</a>{{/if}}
+    {{#if in}}
+    <span class="menu-links">Good to see you <span class="cap">{{first}}</span></span>
+    <a href="/edit" class="menu-links">Edit Profile</a>
+    <a href="/petition" class="menu-links">Petition Page</a>
     <a href="/thanks" class="menu-links">Thanks Page</a>
     <a href="/signers" class="menu-links">Signers Page</a>
+    <a href="/logout" class="menu-links">Log out</a>
     {{/if}}
 </nav>

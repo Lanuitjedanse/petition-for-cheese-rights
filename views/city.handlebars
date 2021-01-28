@@ -1,18 +1,16 @@
 <header class="nav-bar">
-        {{>menu login=true}}
+        {{>menu in=true}}
     </header>
 <section class="city-page">
  
     <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
     
 
-{{!-- <div class="title-signers-box"> --}}
-    <h3>We the undersigned demand that refusing eating cheese becomes a criminal act! </h3>
-{{!-- </div> --}}
+    <h3>We the undersigned from <span class="cap color-bold-city">{{city}}</span> demand that refusing eating cheese becomes a criminal act! </h3>
 
 <div class="list-signers-box">
     {{#rows}}
-    <p class="list-signers"><a href="{{url}}" class="link-signers">{{first}} {{last}}</a> {{age}} <a href="/signers" class="link-signers">{{city}}</a></p>
+    <p class="list-signers"><a href="{{url}}" target="_blank" rel="noopener noreferrer" class="link-signers">{{first}} {{last}}</a></p>
     {{/rows}}
 
 </div>

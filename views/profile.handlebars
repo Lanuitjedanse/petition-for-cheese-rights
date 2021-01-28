@@ -1,13 +1,16 @@
       <header class="nav-bar">
-        {{>menu login=true}}
+        {{>menu in=true}}
     </header>
-            <div class="title-profile-box">
+    <section class="profile-page">
+            
                 <h1>Set up your profile</h1>
                 <h3>Please tell us a bit about yourself</h3>
-            </div>
+          
 
             <form method='POST' class="form-profile-box">
              {{>form profile=true}}
             </form>
 
             <p>{{errorMessage}}</p>
+
+    </section>
