@@ -21,7 +21,7 @@ module.exports.insertSig = (signature, userId) => {
 };
 
 module.exports.getAllSigners = () => {
-    const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url FROM signatures
+    const q = `SELECT users.first, users.last, users.id, user_profiles.age, user_profiles.city, user_profiles.url FROM signatures
     JOIN users
     ON users.id = signatures.user_id
     LEFT JOIN user_profiles

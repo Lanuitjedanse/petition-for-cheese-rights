@@ -34,6 +34,12 @@ nav {
     font-weight: 300;
     text-decoration: none;
 }
+.hello-menu {
+    color: #e0e086;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: 300;
+}
 
 .menu-links:hover {
     color: #e0e086;
@@ -94,7 +100,7 @@ footer {
 .delete-btn:focus {
     background-color: #e0e086;
     border: 2px solid white;
-    color: white;
+    color: black;
     outline: none;
 }
 
@@ -128,6 +134,17 @@ input:focus {
     outline: none;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #191814 inset !important;
+}
+
+input:-webkit-autofill {
+    -webkit-text-fill-color: white !important;
+}
+
 .login-title {
     text-align: center;
     margin-bottom: 30px;
@@ -147,7 +164,8 @@ span.yellow {
     color: #e0e086;
 }
 
-.error-msg-reg {
+.error-msg-reg,
+.error-msg-profile {
     margin-top: 15px;
 
     color: #e0e086;

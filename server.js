@@ -47,7 +47,7 @@ const requireLoggedInUser = (req, res, next) => {
     } else {
         next();
     }
-}; // runs for every single requests we receive
+};
 
 const requireSignature = (req, res, next) => {
     if (!req.session.signatureId) {
@@ -273,17 +273,20 @@ app.post("/thanks", (req, res) => {
 });
 
 app.get("/signers", requireSignature, (req, res) => {
-    console.log("cookie signature get signers: ", req.session.signatureId);
+    console.log("cookie signature get signers: ", req.session.userId);
 
     db.getAllSigners()
         .then(({ rows }) => {
-            console.log("rows.length: ", rows.length);
-            // let first = rows[req.session.signatureId].first;
+            console.log("rows : ", rows);
+            let currentUser = rows.find((row) => {
+                return row.id === req.session.userId;
+            });
+            let first = currentUser.first;
             res.render("signers", {
                 title: "Signers Page",
                 layout: "main",
                 rows,
-                // first,
+                first,
             });
         })
         .catch((err) => {
@@ -293,11 +296,17 @@ app.get("/signers", requireSignature, (req, res) => {
 
 app.get("/signers/:city", requireSignature, (req, res) => {
     const { city } = req.params;
+    console.log(req.session.userId);
 
     db.getSignersByCity(city)
         .then(({ rows }) => {
             let city = rows[0].city;
-            // let first = rows[0].first;
+            console.log("rows: ", rows);
+            // let currentUser = rows.find((row) => {
+            //     return row.id === req.session.loggedIn;
+            // });
+            // console.log("current user : ", currentUser);
+            // // let first = currentUser.first;
             res.render("city", {
                 title: "Signers in your city",
                 layout: "main",
