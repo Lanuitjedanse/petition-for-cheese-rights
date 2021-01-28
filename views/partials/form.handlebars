@@ -13,7 +13,7 @@
                 <button class="sign-log-btn">{{#if signup}}Sign Up{{else}}Log in{{/if}}</button>
     {{/if}}
                 {{#if profile}}
-                <input type="number"  name="age" placeholder="Age">
+                <input type="number" min="18" max="121" name="age" placeholder="Age">
                 <input type="text"  name="city" placeholder="City">
                 <input type="url"  name="url" placeholder="https://example.com">   
                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
@@ -28,12 +28,12 @@
                 <input type='text' name='last' placeholder='Last Name' autocomplete='off' value="{{last}}">
                 <input type='email' name='email' placeholder='Email' autocomplete='off' value="{{email}}">
                 <input type='password' name='pass' placeholder='Password' autocomplete='off'>
-                <input type="number"  name="age" placeholder="Age" value="{{age}}">
+                <input type="number" name="age" placeholder="Age" value="{{age}}">
                 <input type="text"  name="city" placeholder="City" value="{{city}}">
                 <input type="url"  name="url" placeholder="https://example.com" value="{{url}}">   
                 {{/rows}}
                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <button type="submit" class="update-btn-profile">Update</button>
+                <button type="submit" class="edit-btn-profile">Update</button>
                 {{/if}}
    
              

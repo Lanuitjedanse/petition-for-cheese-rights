@@ -1,23 +1,21 @@
 
-    <div class="box-image-petition">
-        <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
-    </div>
+<section class="register-page">
 
-    <div class="cheese-fight-description-box">
-        <h3 class="cheese-fight-description">Fromage frais swiss croque monsieur. Blue castello cheese on toast cut the cheese emmental manchego cheese strings blue castello mozzarella. Dolcelatte fromage lancashire st. agur blue cheese cheese strings port-salut croque monsieur hard cheese</h3>
-    </div>
+        <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
+  
+        <h3 class="cheese-fight-description">A better world with cheese is almost within reach, but we won't get there without your support!
+            Please sign up to support us. <span class="yellow">Cheese out!</span></h3>
+   
     
     <form method='POST' class="form-reg-box">   
         {{>form signup=true login=true}}
     </form>
 
-      <div class="link-login-box">
         <a href="/login" class="link-login">Already have an account? Click here to log in</a>
-    </div>
+  
+        <p class="error-msg-reg">{{errorMessage}}</p>
+    
 
-    <div class="error-msg-reg">
-        <p>{{errorMessage}}</p>
-    </div>
-
+</section>
 
 

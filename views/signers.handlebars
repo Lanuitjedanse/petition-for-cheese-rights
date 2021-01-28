@@ -1,20 +1,17 @@
 
 <section class="signers-page">
 
-  <div class="box-image-petition">
-        <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
-    </div>
-
+    <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
     <h3 class="title-signers-box">We the undersigned demand that refusing eating cheese becomes a criminal act! </h3>
 
 
-<div class="list-signers-box">
-    {{#rows}}
-    <div class="signers-row-box">
-        <p class="list-signers"><a href="{{url}}" class="link-signers">{{first}} {{last}}</a> {{age}} <a class="link-signers" href="/signers/{{city}}">{{city}}</a></p>
-    </div>
-    {{/rows}}
+    <div class="list-signers-box">
+        {{#rows}}
+        <div class="signers-row-box">
+            <p class="list-signers"><a href="{{url}}" class="link-signers">{{first}} {{last}}</a> {{age}} <a class="link-signers" href="/signers/{{city}}">{{city}}</a></p>
+        </div>
+        {{/rows}}
 
-</div>
+    </div>
 
 </section>

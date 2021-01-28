@@ -1,29 +1,21 @@
 
+<section class="thanks-page">
 
-
-<div class="box-image-petition">
     <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
-</div>
 
-<div class="thank-you-box">
     <h2>Thank you {{first}} for signing!</h2>
-    <p>Let's all fight together to make a better world with cheese!</p>
-</div>
+    <p>Let's all contribute together to make a better cheesy world!</p>
 
-<div class="signature-box">
     <img src="{{sigImg}}" alt="signature" class="signature-img">
-</div>
 
-<div class="link-signers-box">
     <a href="/signers" class="link-signers">See all {{count}} signers</a>
-</div>
-
-<a href="/edit"><button>Edit my profile</button></a>
+    <a href="/edit"><button class="edit-btn">Edit my profile</button></a>
 {{!-- NEED TO CHANGE THIS AFTER  --}}
 
-<form method='POST'>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button type="submit" class="delete-btn">Delete my signature</button>
-</form>
+    <form method='POST'>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" class="delete-btn">Delete my signature</button>
+    </form>
 
-{{>menu}}
+
+</section>

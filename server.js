@@ -4,7 +4,7 @@ exports.app = app;
 const db = require("./db");
 const hb = require("express-handlebars");
 const csurf = require("csurf");
-
+const fn = require("./fn");
 // const { sessionSecret } = require("./secrets");
 const cookieSession = require(`cookie-session`);
 const { hash, compare } = require("./bc");
@@ -58,7 +58,7 @@ const requireSignature = (req, res, next) => {
 };
 const requireNoSignature = (req, res, next) => {
     if (req.session.signatureId) {
-        res.redirect("thanks");
+        res.redirect("/thanks");
     } else {
         next();
     }
@@ -71,6 +71,10 @@ const requireLoggedOutUser = (req, res, next) => {
         next();
     }
 };
+
+app.get("/", (req, res) => {
+    res.redirect("/register");
+});
 
 app.get("/register", requireLoggedOutUser, (req, res) => {
     res.render("registration", {
@@ -118,12 +122,19 @@ app.get("/profile", requireLoggedInUser, (req, res) => {
 app.post("/profile", requireLoggedInUser, (req, res) => {
     let { age, city, url } = req.body;
 
+    age === "" ? (age = null) : age;
+
     if (url.startsWith("http://") || url.startsWith("https://")) {
         url = req.body.url;
     } else {
         console.log("bad url dude");
         url = "";
     }
+
+    if (city != "") {
+        city = fn.capitalizeLetters(city);
+    }
+    // console.log("capitalize city: ", city);
 
     db.insertProfileData(age, city, url, req.session.userId)
         .then(() => {
@@ -151,42 +162,41 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
     const { email, pass } = req.body;
     console.log("email pass: ", email, pass);
 
-    if (email) {
-        db.getLoginData(email)
-            .then(({ rows }) => {
-                console.log("rows: ", rows);
-                const hashedPw = rows[0].password;
-                compare(pass, hashedPw)
-                    .then((match) => {
-                        if (match) {
-                            req.session.signatureId = rows[0].signatureid;
-                            req.session.userId = rows[0].id;
-                            req.session.loggedIn = rows[0].id; // check if necessary
+    // if (email) {
+    db.getLoginData(email)
+        .then(({ rows }) => {
+            console.log("rows: ", rows);
+            const hashedPw = rows[0].password;
+            compare(pass, hashedPw)
+                .then((match) => {
+                    if (match) {
+                        req.session.signatureId = rows[0].signatureid;
+                        req.session.userId = rows[0].id;
+                        req.session.loggedIn = rows[0].id; // check if necessary
 
-                            if (!req.session.signatureId) {
-                                res.redirect("/petition");
-                            } else {
-                                res.redirect("/thanks");
-                            }
+                        if (!req.session.signatureId) {
+                            res.redirect("/petition");
                         } else {
-                            res.render("login", {
-                                title: "Please log in",
-                                errorMessage:
-                                    "Oops, there was an error, incorrect password",
-                            });
+                            res.redirect("/thanks");
                         }
-                    })
-                    .catch((err) => console.log("err in compare:", err));
-            })
-            .catch((err) => {
-                console.log("err in getlogin data: ", err);
-                res.render("login", {
-                    title: "Please log in",
-                    errorMessage:
-                        "Oops, something went wrong, incorrect email!",
-                });
+                    } else {
+                        res.render("login", {
+                            title: "Please log in",
+                            errorMessage:
+                                "Oops, there was an error, incorrect password",
+                        });
+                    }
+                })
+                .catch((err) => console.log("err in compare:", err));
+        })
+        .catch((err) => {
+            console.log("err in getlogin data: ", err);
+            res.render("login", {
+                title: "Please log in",
+                errorMessage: "Oops, something went wrong, incorrect email!",
             });
-    }
+        });
+    // }
 });
 
 app.get("/petition", requireNoSignature, requireLoggedInUser, (req, res) => {
@@ -281,6 +291,7 @@ app.get("/signers/:city", requireSignature, (req, res) => {
 
     db.getSignersByCity(city)
         .then(({ rows }) => {
+            // city.toLowerCase();
             res.render("city", {
                 title: "Signers in your city",
                 layout: "main",
@@ -307,7 +318,12 @@ app.get("/edit", requireLoggedInUser, (req, res) => {
 });
 
 app.post("/edit", requireLoggedInUser, (req, res) => {
-    const { first, last, email, pass, age, city, url } = req.body;
+    let { first, last, email, pass, age, city, url } = req.body;
+    age === "" ? (age = null) : age;
+
+    if (city != "") {
+        city = fn.capitalizeLetters(city);
+    }
 
     if (pass) {
         hash(pass)

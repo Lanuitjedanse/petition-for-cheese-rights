@@ -22,9 +22,9 @@ module.exports.insertSig = (signature, userId) => {
 
 module.exports.getAllSigners = () => {
     const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url, signatures.signature FROM users
-    JOIN user_profiles
+    LEFT JOIN user_profiles
     ON users.id = user_profiles.user_id
-    JOIN signatures
+    LEFT JOIN signatures
     ON users.id = signatures.user_id`;
 
     return db.query(q); // db.query takes potentially 2 arguments the first being a query we want to run on our database

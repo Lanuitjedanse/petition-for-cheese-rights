@@ -10,7 +10,11 @@ body {
     color: white;
     display: grid;
     min-height: 100vh;
-    grid-template-rows: 1fr 30px;
+    grid-template-rows: 100px 1fr 30px;
+}
+
+header {
+    background-color: white;
 }
 
 footer {
@@ -38,27 +42,17 @@ footer {
     justify-content: center;
 }
 
-.explanation-petition-box {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .img-say-cheese {
     /* margin-top: 10px; */
     width: 30%;
     border-radius: 15px;
-}
-
-.box-image-petition {
-    display: flex;
-    justify-content: center;
+    margin-bottom: 30px;
 }
 
 .btn-petition,
 .sign-log-btn,
-.btn-profile {
+.btn-profile,
+.edit-btn-profile {
     margin-top: 15px;
     border-radius: 15px;
     background-color: white;
@@ -71,26 +65,24 @@ footer {
 
 .btn-petition:focus,
 .sign-log-btn:focus,
-.btn-profile:focus {
+.btn-profile:focus,
+.edit-btn-profile:focus,
+.edit-btn:focus,
+.delete-btn:focus {
     background-color: #e0e086;
     border: 2px solid white;
     color: white;
     outline: none;
 }
 
-.error-msg-box-form-sig {
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-}
-
 .error-msg-form-sig {
     color: #e0e086;
+    margin-top: 15px;
 }
 
 .form-login-box,
 .form-reg-box {
-    /* margin-top: 10px; */
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -111,51 +103,26 @@ input {
     margin-bottom: 30px;
 }
 
-/* .petition-description,
-.sign-here {
-    font-weight: 200;
-} */
-
-.cheese-fight-description-box {
-    display: flex;
-    justify-content: center;
-    text-align: center;
+.petition-description {
+    margin-top: 15px;
 }
 
 .cheese-fight-description {
     max-width: 600px;
     margin-bottom: 20px;
+    text-align: center;
+}
+
+span.yellow {
+    color: #e0e086;
 }
 
 .error-msg-reg {
     margin-top: 15px;
-    display: flex;
-    justify-content: center;
+
     color: #e0e086;
 }
 
-.thank-you-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.signature-box,
-.link-signers-box {
-    display: flex;
-    justify-content: center;
-}
-
-/* {
-    text-decoration: none;
-    color: #e0e086;
-} */
-
-.title-signers-box,
-.link-reg-box,
-.error-login-msg-box,
-.link-login-box,
 .form-profile-box,
 .title-profile-box {
     display: flex;
@@ -193,6 +160,7 @@ input {
 
 a.list-signers {
     text-decoration: none;
+    text-transform: capitalize;
 }
 
 .list-signers-box {
@@ -202,4 +170,47 @@ a.list-signers {
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     /* align-content: center; */
+}
+
+.edit-page,
+.thanks-page,
+.login-page,
+.petition-page,
+.register-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.city-page,
+.signers-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.form-edit-box {
+    margin-top: 30px;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-btn,
+.delete-btn {
+    margin-top: 15px;
+    border-radius: 15px;
+    background-color: white;
+    font-size: 15px;
+    height: 30px;
+    /* width: 100px; */
+    /* font-weight: 200; */
+    border: 2px solid #e0e086;
 }

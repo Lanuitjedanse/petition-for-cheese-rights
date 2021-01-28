@@ -1,20 +1,21 @@
 
+    <header class="nav-bar">
+        {{>menu login=true}}
+    </header>
 
-
-    <div class="box-image-petition">
+    <section class="login-page">
         <img src="/images/saycheese.jpg" alt="neon say cheese" class="img-say-cheese">
-    </div>
+    
 
-    <h2 class="login-title">{{title}}</h2>
+    <h1 class="login-title">{{title}}</h1>
 
     <form method='POST' class="form-login-box">
         {{>form login=true}}
     </form>
 
-    <div class="link-reg-box">
         <a href="/register" class="link-reg">Don't have an account yet? Click here to register</a>
-    </div>
-
-    <div class="error-login-msg-box">
+    
         <p class="error-msg-login">{{errorMessage}}</p>
-    </div>
+  
+
+    </section>
