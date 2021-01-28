@@ -10,11 +10,26 @@ body {
     color: white;
     display: grid;
     min-height: 100vh;
-    grid-template-rows: 100px 1fr 30px;
+    grid-template-rows: 60px 1fr 30px;
 }
 
 header {
+    margin-top: 0;
     background-color: white;
+    display: flex;
+    justify-content: flex-end;
+
+    align-items: flex-end;
+}
+
+/* .inner-box-nav {
+    align-self: center;
+} */
+
+.menu-links {
+    margin-left: 10px;
+    margin-right: 10px;
+    color: black;
 }
 
 footer {
@@ -170,6 +185,10 @@ a.list-signers {
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     /* align-content: center; */
+}
+
+.edit-page {
+    background-image: url("images/cheese-bcg.jpg");
 }
 
 .edit-page,
