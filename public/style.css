@@ -194,6 +194,10 @@ span.yellow {
     color: #e0e086;
 }
 
+a.link-signers {
+    text-transform: capitalize;
+}
+
 .title-profile-box {
     margin-top: 120px;
     margin-bottom: 20px;
