@@ -10,10 +10,17 @@
     <div class="list-signers-box">
         {{#rows}}
         <div class="signers-row-box">
-            <p class="list-signers"><a href="{{url}}" target="_blank" rel="noopener noreferrer" class="link-signers" >{{first}} {{last}}</a> {{age}} <a class="link-signers" href="/signers/{{city}}">{{city}}</a></p>
+             {{#if url}}
+        
+             <p class="list-signers"><a href="{{url}}" target="_blank" rel="noopener noreferrer" class="link-signers" >{{first}} {{last}}</a> {{age}} <a class="link-signers" href="/signers/{{city}}">{{city}}</a></p>
+             {{else}}<p class="list-signers">{{first}} {{last}} {{age}} <a class="link-signers" href="/signers/{{city}}">{{city}}</a></p>
+            
+            {{/if}}
+           
         </div>
         {{/rows}}
 
     </div>
 
 </section>
+
