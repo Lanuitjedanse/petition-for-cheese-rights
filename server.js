@@ -72,6 +72,14 @@ const requireLoggedOutUser = (req, res, next) => {
     }
 };
 
+// const backToProfile = (req, res, next) => {
+//     if (req.session.signatureId && req.url == "/profile") {
+//         res.redirect("/edit");
+//     } else {
+//         next();
+//     }
+// };
+
 app.get("/", (req, res) => {
     res.redirect("/register");
 });
@@ -100,14 +108,15 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
                     console.log("error in insert reg data", err);
                     res.render("registration", {
                         title: "Sign Up Page",
-                        errorMessage: "Something went wrong in the DB.",
+                        errorMessage: "Oops, something went wrong!",
                     });
                 });
         });
     } else {
         res.render("registration", {
             title: "Sign Up Page",
-            errorMessage: "Something went wrong. Please fill out all fields",
+            errorMessage:
+                "Oops, something went wrong. Please fill out all fields",
         });
     }
 });
@@ -146,7 +155,7 @@ app.post("/profile", requireLoggedInUser, (req, res) => {
             res.render("profile", {
                 title: "Profile page",
                 layout: "main",
-                errorMessage: "Oops, something went wrong! Please try again.",
+                errorMessage: "Oops, something went wrong!",
             });
         });
 });
@@ -183,7 +192,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
                         res.render("login", {
                             title: "Please log in",
                             errorMessage:
-                                "Oops, there was an error, incorrect password",
+                                "This email or password doesn't exist.",
                         });
                     }
                 })
@@ -195,7 +204,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
             console.log("err in getlogin data: ", err);
             res.render("login", {
                 title: "Please log in",
-                errorMessage: "Oops, something went wrong, incorrect email!",
+                errorMessage: "This email or password doesn't exist.",
             });
         });
     // }

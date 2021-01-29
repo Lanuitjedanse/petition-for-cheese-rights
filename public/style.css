@@ -119,6 +119,7 @@ footer {
 }
 
 input {
+    min-width: 300px;
     width: 20%;
     font-size: 1em;
     padding: 7px 11px;
@@ -275,4 +276,20 @@ a.list-signers {
     /* width: 100px; */
     /* font-weight: 200; */
     border: 2px solid #e0e086;
+}
+
+@media only screen and (max-width: 600px) {
+    .img-say-cheese {
+        width: 40%;
+    }
+    .btn-petition,
+    .sign-log-btn,
+    .btn-profile,
+    .edit-btn-profile {
+        width: 80%;
+    }
+    input {
+        width: 80%;
+        max-width: 80%;
+    }
 }
